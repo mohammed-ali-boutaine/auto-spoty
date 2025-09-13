@@ -1,0 +1,6 @@
+# Core dependencies
+spotipy==2.23.0
+yt-dlp==2023.10.13
+python-dotenv==1.0.0
+InquirerPy==0.3.4
+

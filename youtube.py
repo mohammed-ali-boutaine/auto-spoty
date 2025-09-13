@@ -25,4 +25,4 @@ def download_from_youtube(query, output_path="downloads/"):
         except Exception as e:
             return False, str(e)
         
-download_from_youtube("let her go")
+download_from_youtube()
