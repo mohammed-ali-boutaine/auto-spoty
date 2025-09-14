@@ -1,7 +1,9 @@
 import json
 from InquirerPy import inquirer
 from spotify import SpotifyManager
-# from youtube import download_from_youtube
+from youtube import download_from_youtube
+import os
+
 
 # Menu choices
 choices = [
@@ -9,7 +11,7 @@ choices = [
     "Display Playlists",
     "Display Liked Songs",
     "History (Recent Played)",
-    # "Download Playlist Songs",
+    "Download Playlist Songs",
     # "Download Song",
     # "Play/Pause Music",
     "Exit"
@@ -54,10 +56,6 @@ def main():
                 # print(json.dumps(user,indent=4))
                 print("=" * 50)
                 
-                # view_full = inquirer.confirm(message="View full profile data?", default=False).execute()
-                # if view_full:
-                #     print(json.dumps(user, indent=4))
-            
 
             # Choice 2 - Display all playlists
             elif choice == "Display Playlists":
@@ -125,42 +123,42 @@ def main():
                     print(f"   Played at: {played_at}")
             
             # Choice 5 - Download Playlist Songs
-            # elif choice == "Download Playlist Songs":
-            #     playlists = spotify_manager.get_user_playlists()
+            elif choice == "Download Playlist Songs":
+                playlists = spotify_manager.get_user_playlists()
                 
-            #     if not playlists:
-            #         print("\nNo playlists found")
-            #         continue
+                if not playlists:
+                    print("\nNo playlists found")
+                    continue
                 
-            #     print("\nSelect a playlist to download:")
-            #     playlist_choices = [f"{i+1}. {playlist['name']}" for i, playlist in enumerate(playlists)]
-            #     playlist_choice = inquirer.select(
-            #         message="Select playlist:",
-            #         choices=playlist_choices,
-            #     ).execute()
+                print("\nSelect a playlist to download:")
+                playlist_choices = [f"{i+1}. {playlist['name']}" for i, playlist in enumerate(playlists)]
+                playlist_choice = inquirer.select(
+                    message="Select playlist:",
+                    choices=playlist_choices,
+                ).execute()
                 
-            #     playlist_index = int(playlist_choice.split('.')[0]) - 1
-            #     selected_playlist = playlists[playlist_index]
+                playlist_index = int(playlist_choice.split('.')[0]) - 1
+                selected_playlist = playlists[playlist_index]
                 
-            #     print(f"\nDownloading tracks from '{selected_playlist['name']}'...")
-            #     tracks = spotify_manager.get_playlist_tracks(selected_playlist['id'])
+                print(f"\nDownloading tracks from '{selected_playlist['name']}'...")
+                tracks = spotify_manager.get_playlist_tracks(selected_playlist['id'])
                 
-            #     download_path = f"downloads/{selected_playlist['name']}/"
-            #     if not os.path.exists(download_path):
-            #         os.makedirs(download_path)
+                download_path = f"downloads/{selected_playlist['name']}/"
+                if not os.path.exists(download_path):
+                    os.makedirs(download_path)
                 
-            #     for i, item in enumerate(tracks):
-            #         track = item['track']
-            #         artists = ", ".join([artist['name'] for artist in track['artists']])
-            #         query = f"{track['name']} {artists}"
+                for i, item in enumerate(tracks):
+                    track = item['track']
+                    artists = ", ".join([artist['name'] for artist in track['artists']])
+                    query = f"{track['name']} {artists}"
                     
-            #         print(f"Downloading ({i+1}/{len(tracks)}): {query}")
-            #         success, result, _ = download_from_youtube(query, download_path)
+                    print(f"Downloading ({i+1}/{len(tracks)}): {query}")
+                    success, result = download_from_youtube(query, download_path)
                     
-            #         if success:
-            #             print(f"✓ Downloaded: {result}")
-            #         else:
-            #             print(f"✗ Failed to download: {result}")
+                    if success:
+                        print(f"✓ Downloaded: {result}")
+                    else:
+                        print(f"✗ Failed to download: {result}")
             
             # # Choice 6 - Download Song
             # elif choice == "Download Song":
